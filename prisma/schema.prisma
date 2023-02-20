@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int     @id @default(autoincrement())
+  name         String
+  username     String
+  latitude     String? @db.VarChar(255)
+  longitude    String? @db.VarChar(255)
+  notification Boolean @default(false)
+  fasting      Boolean @default(false)
+  reminderTime Int     @map("remindertime")
+  logo         Int?    @map("logo")
+  time         Time[]
+
+  @@map("user")
+}
+
+model Time {
+  id     Int @id @default(autoincrement())
+  userId Int @map("user_id")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("time")
+}
